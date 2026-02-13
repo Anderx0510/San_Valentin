@@ -8,7 +8,6 @@
 
 <style>
 
-/* ===== FONDO ELEGANTE ANIMADO ===== */
 
 body {
     margin: 0;
@@ -29,7 +28,6 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* ===== TARJETA GLASS PREMIUM ===== */
 
 .container {
     position: relative;
@@ -174,6 +172,62 @@ img:hover {
     }
 }
 
+/* ===== CORAZON CENTRAL DISNEY ===== */
+
+.big-heart {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 120px;
+    z-index: 999;
+    animation: appear 0.5s ease forwards, pulse 1s 0.5s ease 2;
+    text-shadow: 0 0 40px rgba(255,0,100,0.8);
+}
+
+@keyframes appear {
+    to { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.25); }
+}
+
+/* ===== EXPLOSION MAGICA ===== */
+
+.magic-heart {
+    position: fixed;
+    font-size: 20px;
+    pointer-events: none;
+    animation: magicExplode 1.5s ease-out forwards;
+}
+
+@keyframes magicExplode {
+    0% {
+        transform: translate(0,0) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) scale(1.8);
+        opacity: 0;
+    }
+}
+
+/* ===== POLVO DE HADA ===== */
+
+.sparkle {
+    position: fixed;
+    font-size: 14px;
+    pointer-events: none;
+    animation: sparkleFall 2s linear forwards;
+    color: gold;
+}
+
+@keyframes sparkleFall {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(150px); }
+}
 
 </style>
 </head>
@@ -261,7 +315,7 @@ document.addEventListener("mousemove", (e) => {
 });
 
 yesBtn.addEventListener("click", () => {
-
+    disneyLoveExplosion();
     question.classList.add("hidden");
     result.classList.remove("hidden");
 
@@ -332,6 +386,95 @@ function heartFirework() {
         }, 1000);
     }
 }
+
+function disneyLoveExplosion() {
+
+    // 1️⃣ Crear corazón gigante
+    const bigHeart = document.createElement("div");
+    bigHeart.classList.add("big-heart");
+    bigHeart.innerHTML = "💖";
+    document.body.appendChild(bigHeart);
+
+    // 2️⃣ Después de latir, explota
+    setTimeout(() => {
+
+        bigHeart.remove();
+
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        const particles = 80;
+
+        for (let i = 0; i < particles; i++) {
+
+            const heart = document.createElement("div");
+            heart.classList.add("magic-heart");
+
+            const hearts = ["💖","💗","💘","💝"];
+            heart.innerHTML = hearts[Math.floor(Math.random()*hearts.length)];
+
+            heart.style.left = centerX + "px";
+            heart.style.top = centerY + "px";
+
+            const angle = Math.random() * 2 * Math.PI;
+            const radius = Math.random() * 250 + 100;
+
+            const x = Math.cos(angle) * radius + "px";
+            const y = Math.sin(angle) * radius + "px";
+
+            heart.style.setProperty("--x", x);
+            heart.style.setProperty("--y", y);
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 1500);
+        }
+
+        createSparkles();
+
+    }, 1500);
+}
+
+function createSparkles() {
+    const sparkleCount = 40;
+
+    for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.classList.add("sparkle");
+        sparkle.innerHTML = "✨";
+
+        sparkle.style.left = Math.random() * 100 + "vw";
+        sparkle.style.top = Math.random() * 50 + "vh";
+
+        document.body.appendChild(sparkle);
+
+        setTimeout(() => sparkle.remove(), 2000);
+    }
+}
+
+function createHeartsBackground() {
+    setInterval(() => {
+
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+
+        const hearts = ["💗","💖","💘","💞"];
+        heart.innerHTML = hearts[Math.floor(Math.random()*hearts.length)];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (Math.random() * 15 + 10) + "px";
+        heart.style.opacity = Math.random();
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 6000);
+
+    }, 500);
+}
+
+createHeartsBackground(); 
 
 
 </script>
