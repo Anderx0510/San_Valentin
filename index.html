@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>¿Quieres ser mi San Valentín?</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
@@ -20,6 +21,7 @@ body {
     background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
+    overflow-x: hidden;
 }
 
 @keyframes gradientBG {
@@ -32,16 +34,18 @@ body {
 .container {
     position: relative;
     text-align: center;
-    padding: 60px 50px;
+    padding: 40px 20px;
     border-radius: 30px;
-    width: 520px;
+    width: 90%;
+    max-width: 600px;
     backdrop-filter: blur(25px);
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.3);
     box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    box-sizing: border-box;
     animation: fadeIn 1.2s ease;
-    transition: 0.4s;
 }
+
 
 .container:hover {
     transform: translateY(-5px);
@@ -75,10 +79,10 @@ h1 {
 }
 
 button {
-    padding: 15px 45px;
+    padding: clamp(8px, 3vw, 16px) clamp(15px, 5vw, 30px);
     border: none;
     border-radius: 60px;
-    font-size: 18px;
+    font-size: clamp(14px, 4vw, 22px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -231,6 +235,31 @@ img:hover {
     100% { opacity: 0; transform: translateY(150px); }
 }
 
+.floating-message {
+    position: fixed;
+    font-size: 20px;
+    color: #ff4d6d;
+    font-weight: bold;
+    animation: floatUp 2s ease forwards;
+    pointer-events: none;
+    z-index: 999;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    30% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+}
+
+
 </style>
 </head>
 
@@ -246,10 +275,12 @@ img:hover {
 </div>
 
 <div class="result hidden" id="result">
-    <h1>Ahora oficialmente somos San Valentín 💕</h1>
+    <h1>Ahora oficialmente eres mi San Valentín 💕</h1>
     <img src="Gatitoc.png" alt="Nuestra imagen">
     <div class="counter" id="counter"></div>
 </div>
+
+
 
 <script>
 
@@ -315,6 +346,8 @@ if (isMobileDevice()) {
     let noScale = 1;
 
     noBtn.addEventListener("click", () => {
+
+        showSadMessage();
 
         noScale -= 0.15;
         yesSize += 0.2;
@@ -508,6 +541,38 @@ function createHeartsBackground() {
 }
 
 createHeartsBackground(); 
+
+let sadPhrases = [
+    "¿Segura? 🥺",
+    "¿En serio? 😢",
+    "Piénsalo otra vez 💔",
+    "De veras 🥺",
+    "¿Y si lo piensas un poco más? 😔",
+    "Hay una opción mejor al lado 😏"
+];
+
+function showSadMessage() {
+
+    if (sadPhrases.length === 0) return; // ya no quedan frases
+
+    const randomIndex = Math.floor(Math.random() * sadPhrases.length);
+    const text = sadPhrases.splice(randomIndex, 1)[0]; 
+    // 👆 splice la elimina del array
+
+    const message = document.createElement("div");
+    message.classList.add("floating-message");
+    message.innerText = text;
+
+    message.style.left = Math.random() * 60 + 20 + "vw";
+    message.style.top = Math.random() * 40 + 30 + "vh";
+
+    document.body.appendChild(message);
+
+    setTimeout(() => {
+        message.remove();
+    }, 2000);
+}
+
 
 
 </script>
