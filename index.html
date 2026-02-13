@@ -82,6 +82,7 @@ button {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-block;
 }
 
 /* BOTON SI */
@@ -103,6 +104,7 @@ button {
     background: rgba(0,0,0,0.7);
     color: white;
     backdrop-filter: blur(10px);
+    transform-origin: center;
 }
 
 #no:hover {
@@ -256,6 +258,10 @@ let moveCooldown = 250;
 let lastX = 0;
 let lastY = 0;
 
+function isMobileDevice() {
+    return window.matchMedia("(pointer: coarse)").matches;
+}
+
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 const question = document.getElementById("question");
@@ -302,17 +308,44 @@ function moveNoButton() {
     yesBtn.style.transform = `scale(${yesSize})`;
 }
 
-document.addEventListener("mousemove", (e) => {
-    const rect = noBtn.getBoundingClientRect();
-    const distance = Math.hypot(
-        e.clientX - (rect.left + rect.width / 2),
-        e.clientY - (rect.top + rect.height / 2)
-    );
+// ===== COMPORTAMIENTO SEGÚN DISPOSITIVO =====
 
-    if (distance < 100) {
-        moveNoButton();
-    }
-});
+if (isMobileDevice()) {
+
+    let noScale = 1;
+
+    noBtn.addEventListener("click", () => {
+
+        noScale -= 0.15;
+        yesSize += 0.2;
+
+        if (noScale <= 0.2) {
+            noBtn.style.opacity = "0";
+            noBtn.style.pointerEvents = "none";
+        }
+
+        noBtn.style.transform = `scale(${noScale})`;
+        yesBtn.style.transform = `scale(${yesSize})`;
+    });
+
+} else {
+
+    // 💻 En PC el botón huye
+    document.addEventListener("mousemove", (e) => {
+
+        const rect = noBtn.getBoundingClientRect();
+
+        const distance = Math.hypot(
+            e.clientX - (rect.left + rect.width / 2),
+            e.clientY - (rect.top + rect.height / 2)
+        );
+
+        if (distance < 100) {
+            moveNoButton();
+        }
+    });
+
+}
 
 yesBtn.addEventListener("click", () => {
     disneyLoveExplosion();
